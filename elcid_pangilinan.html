@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elcid C. Pangilinan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #c9a96e; --gold-dim: #8a6e3e; --ink: #0d0c0a; --ink-2: #141210; --ink-3: #1c1a16;
+    --stone: #2a2720; --stone-2: #3a3630; --mist: #6b665e; --fog: #4a4640;
+    --parchment: #c5bfb0; --parchment-dim: #8a8478; --cream: #e8e2d4;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--cream); font-family: 'DM Mono', monospace; font-weight: 300; line-height: 1.7; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+  ::selection { background: var(--gold-dim); color: var(--cream); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: linear-gradient(to bottom, rgba(13,12,10,0.98) 0%, rgba(13,12,10,0) 100%); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; }
+  .nav-links { display: flex; gap: 3rem; list-style: none; }
+  .nav-links a { color: var(--parchment-dim); text-decoration: none; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 4rem 6rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 10% 80%, rgba(201,169,110,0.04) 0%, transparent 50%), var(--ink); }
+  .hero-line { width: 1px; height: 120px; background: linear-gradient(to bottom, transparent, var(--gold-dim)); margin-bottom: 3rem; opacity: 0; animation: fadeUp 1s ease 0.2s forwards; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
+  .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; color: var(--cream); letter-spacing: -0.01em; margin-bottom: 1rem; opacity: 0; animation: fadeUp 1s ease 0.6s forwards; }
+  .hero-name em { font-style: italic; color: var(--gold); }
+  .hero-role { font-size: 12px; letter-spacing: 0.15em; color: var(--parchment-dim); text-transform: uppercase; max-width: 500px; line-height: 2; opacity: 0; animation: fadeUp 1s ease 0.8s forwards; }
+  .hero-scroll { position: absolute; bottom: 2.5rem; right: 4rem; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeIn 1s ease 1.4s forwards; }
+  .hero-scroll span { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fog); writing-mode: vertical-rl; }
+  .hero-scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--fog), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  section { padding: 7rem 4rem; position: relative; }
+  .section-label { font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .section-divider { width: 40px; height: 1px; background: var(--gold-dim); margin-bottom: 4rem; }
+  #about { background: var(--ink-2); display: grid; grid-template-columns: 1fr 2fr; gap: 6rem; align-items: start; }
+  .about-left h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; color: var(--cream); letter-spacing: -0.01em; }
+  .about-left h2 em { font-style: italic; color: var(--gold); display: block; }
+  .about-right p { font-size: 14px; line-height: 2; color: var(--parchment); margin-bottom: 1.5rem; max-width: 560px; }
+  .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2.5rem; }
+  .tag { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold-dim); padding: 6px 14px; }
+  .credentials { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--stone-2); }
+  .credential-item { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1.2rem; }
+  .credential-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 6px; flex-shrink: 0; }
+  .credential-item p { font-size: 12px; line-height: 1.8; color: var(--parchment-dim); margin: 0; }
+  #projects { background: var(--ink); }
+  .projects-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
+  .projects-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--cream); line-height: 1; }
+  .projects-header h2 em { font-style: italic; color: var(--gold); }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .project-card { background: var(--ink-2); padding: 2.5rem; border: 1px solid var(--stone); position: relative; overflow: hidden; cursor: default; transition: background 0.4s, border-color 0.4s; }
+  .project-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gold-dim); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+  .project-card:hover { background: var(--ink-3); border-color: var(--stone-2); }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-num { font-size: 10px; letter-spacing: 0.3em; color: var(--fog); margin-bottom: 1.5rem; }
+  .project-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--cream); margin-bottom: 0.75rem; line-height: 1.2; }
+  .project-desc { font-size: 12px; line-height: 1.9; color: var(--parchment-dim); margin-bottom: 1.5rem; }
+  .project-tag { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); border-left: 2px solid var(--gold-dim); padding-left: 10px; }
+  #contact { background: var(--ink-2); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+  .contact-left h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; color: var(--cream); }
+  .contact-left h2 em { font-style: italic; color: var(--gold); display: block; }
+  .contact-left p { font-size: 13px; line-height: 2; color: var(--parchment-dim); margin-top: 1.5rem; max-width: 360px; }
+  .contact-right { padding-top: 1rem; }
+  .contact-item { display: flex; flex-direction: column; gap: 4px; padding: 1.5rem 0; border-bottom: 1px solid var(--stone); }
+  .contact-item:first-child { border-top: 1px solid var(--stone); }
+  .contact-item-label { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--fog); }
+  .contact-item-value { font-size: 13px; color: var(--parchment); transition: color 0.3s; }
+  .contact-item-value a { color: inherit; text-decoration: none; }
+  .contact-item:hover .contact-item-value { color: var(--gold); }
+  .cta-btn { display: inline-block; margin-top: 3rem; padding: 14px 36px; border: 1px solid var(--gold-dim); color: var(--gold); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; background: transparent; transition: background 0.3s, color 0.3s; cursor: pointer; }
+  .cta-btn:hover { background: var(--gold); color: var(--ink); }
+  footer { background: var(--ink); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--stone); }
+  footer p { font-size: 10px; letter-spacing: 0.15em; color: var(--fog); }
+  .footer-mark { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold-dim); letter-spacing: 0.2em; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ECP</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+  <div class="hero-eyebrow">Development Executive · Senior Vice President</div>
+  <h1 class="hero-name">Elcid <em>C.</em><br>Pangilinan</h1>
+  <div class="hero-role">Land Bank of the Philippines &nbsp;·&nbsp; Chevening Alumni Foundation of the Philippines</div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-left">
+    <div class="section-label">01 — About</div>
+    <div class="section-divider"></div>
+    <h2>A leader<br>in public<br><em>finance</em></h2>
+  </div>
+  <div class="about-right">
+    <p>Elcid C. Pangilinan is a seasoned development executive with decades of distinguished service at the Land Bank of the Philippines, where he currently holds the position of Senior Vice President. His career is defined by a commitment to national development, financial inclusion, and the empowerment of communities through accessible and strategic banking.</p>
+    <p>Beyond his executive role, Elcid is the Chair of the Chevening Alumni Foundation of the Philippines — a testament to his dedication to nurturing the next generation of leaders and fostering ties between Filipino professionals and the global community shaped by the UK's prestigious Chevening Scholarship programme.</p>
+    <div class="about-tags">
+      <span class="tag">Development Finance</span>
+      <span class="tag">Public Policy</span>
+      <span class="tag">Leadership</span>
+      <span class="tag">Alumni Engagement</span>
+      <span class="tag">Financial Inclusion</span>
+    </div>
+    <div class="credentials">
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Senior Vice President, Land Bank of the Philippines</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>OIC/President & CEO, Overseas Filipino Bank</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Chair, Chevening Alumni Foundation of the Philippines</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Chevening Scholar — a UK Government scholarship programme</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Alumni, Hubert H. Humphrey Fellowship Program</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="projects-header">
+    <div>
+      <div class="section-label">02 — Work & Initiatives</div>
+      <h2>Key <em>Focus</em><br>Areas</h2>
+    </div>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-num">001</div>
+      <div class="project-title">Development Banking & Financial Inclusion</div>
+      <p class="project-desc">Leading initiatives that expand the reach of formal banking services to underserved sectors — farmers, fisherfolk, MSMEs, and rural communities — through Land Bank's mandate as a development financial institution.</p>
+      <div class="project-tag">Land Bank of the Philippines</div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">002</div>
+      <div class="project-title">Chevening Alumni Leadership</div>
+      <p class="project-desc">As Chair of the Chevening Alumni Foundation of the Philippines, fostering a community of globally-minded Filipino leaders and enabling meaningful exchange between alumni, government, and civil society.</p>
+      <div class="project-tag">Chevening Alumni Foundation</div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">003</div>
+      <div class="project-title">Agricultural & Agrarian Reform Finance</div>
+      <p class="project-desc">Driving programs that support agrarian reform beneficiaries and the agricultural sector, channeling credit and resources to those at the heart of the Philippine rural economy.</p>
+      <div class="project-tag">Rural Development</div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">004</div>
+      <div class="project-title">Public-Private Partnerships & Stakeholder Engagement</div>
+      <p class="project-desc">Building bridges between government, international partners, and local communities to advance sustainable development goals and create lasting impact across the country.</p>
+      <div class="project-tag">Strategic Partnerships</div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-left">
+    <div class="section-label">03 — Contact</div>
+    <div class="section-divider"></div>
+    <h2>Get in<br><em>Touch</em></h2>
+    <p>For professional inquiries, speaking engagements, or correspondence related to the Chevening Alumni Foundation of the Philippines.</p>
+  </div>
+  <div class="contact-right">
+    <div class="contact-item">
+      <span class="contact-item-label">Organization</span>
+      <span class="contact-item-value">Land Bank of the Philippines</span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Position</span>
+      <span class="contact-item-value">Senior Vice President, Development Executive</span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Foundation</span>
+      <span class="contact-item-value">Chevening Alumni Foundation of the Philippines</span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Based In</span>
+      <span class="contact-item-value">Philippines</span>
+    </div>
+    <a class="cta-btn" href="mailto:">Send a Message</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Elcid C. Pangilinan. All rights reserved.</p>
+  <span class="footer-mark">ECP</span>
+</footer>
+
+</body>
+</html>
