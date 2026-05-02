@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elcid C. Pangilinan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #c9a96e; --gold-dim: #8a6e3e; --ink: #0d0c0a; --ink-2: #141210; --ink-3: #1c1a16;
+    --stone: #2a2720; --stone-2: #3a3630; --fog: #4a4640;
+    --parchment: #c5bfb0; --parchment-dim: #8a8478; --cream: #e8e2d4;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--cream); font-family: 'DM Mono', monospace; font-weight: 300; line-height: 1.7; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+  ::selection { background: var(--gold-dim); color: var(--cream); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 4rem; background: linear-gradient(to bottom, rgba(13,12,10,0.98) 0%, rgba(13,12,10,0) 100%); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; }
+  .nav-links { display: flex; gap: 3rem; list-style: none; }
+  .nav-links a { color: var(--parchment-dim); text-decoration: none; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 4rem 6rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 10% 80%, rgba(201,169,110,0.04) 0%, transparent 50%), var(--ink); }
+  .hero-line { width: 1px; height: 120px; background: linear-gradient(to bottom, transparent, var(--gold-dim)); margin-bottom: 3rem; opacity: 0; animation: fadeUp 1s ease 0.2s forwards; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
+  .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; color: var(--cream); letter-spacing: -0.01em; margin-bottom: 1rem; opacity: 0; animation: fadeUp 1s ease 0.6s forwards; }
+  .hero-name em { font-style: italic; color: var(--gold); }
+  .hero-role { font-size: 12px; letter-spacing: 0.15em; color: var(--parchment-dim); text-transform: uppercase; max-width: 560px; line-height: 2; opacity: 0; animation: fadeUp 1s ease 0.8s forwards; }
+  .hero-scroll { position: absolute; bottom: 2.5rem; right: 4rem; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeIn 1s ease 1.4s forwards; }
+  .hero-scroll span { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fog); writing-mode: vertical-rl; }
+  .hero-scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--fog), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  section { padding: 7rem 4rem; position: relative; }
+  .section-label { font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .section-divider { width: 40px; height: 1px; background: var(--gold-dim); margin-bottom: 4rem; }
+  #about { background: var(--ink-2); display: grid; grid-template-columns: 1fr 2fr; gap: 6rem; align-items: start; }
+  .about-left h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; color: var(--cream); letter-spacing: -0.01em; }
+  .about-left h2 em { font-style: italic; color: var(--gold); display: block; }
+  .about-right p { font-size: 13px; line-height: 2; color: var(--parchment); margin-bottom: 1.5rem; max-width: 560px; }
+  .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2.5rem; }
+  .tag { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold-dim); padding: 6px 14px; }
+  .credentials { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--stone-2); }
+  .credentials-title { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--fog); margin-bottom: 1.2rem; }
+  .credential-item { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1rem; }
+  .credential-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 6px; flex-shrink: 0; }
+  .credential-item p { font-size: 12px; line-height: 1.8; color: var(--parchment-dim); margin: 0; }
+  #experience { background: var(--ink); }
+  #experience h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--cream); line-height: 1; margin-bottom: 4rem; }
+  #experience h2 em { font-style: italic; color: var(--gold); }
+  .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .exp-card { background: var(--ink-2); padding: 2.5rem; border: 1px solid var(--stone); position: relative; overflow: hidden; transition: background 0.4s, border-color 0.4s; }
+  .exp-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gold-dim); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+  .exp-card:hover { background: var(--ink-3); border-color: var(--stone-2); }
+  .exp-card:hover::before { transform: scaleX(1); }
+  .exp-org { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .exp-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; color: var(--cream); margin-bottom: 0.4rem; line-height: 1.3; }
+  .exp-period { font-size: 10px; letter-spacing: 0.1em; color: var(--fog); margin-bottom: 1rem; }
+  .exp-desc { font-size: 11px; line-height: 1.9; color: var(--parchment-dim); }
+  #education { background: var(--ink-2); }
+  #education h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--cream); line-height: 1; margin-bottom: 4rem; }
+  #education h2 em { font-style: italic; color: var(--gold); }
+  .edu-list { display: flex; flex-direction: column; gap: 0; }
+  .edu-item { display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; padding: 2rem 0; border-bottom: 1px solid var(--stone); align-items: start; }
+  .edu-item:first-child { border-top: 1px solid var(--stone); }
+  .edu-year { font-size: 11px; letter-spacing: 0.1em; color: var(--fog); padding-top: 4px; }
+  .edu-school { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--cream); margin-bottom: 0.3rem; }
+  .edu-degree { font-size: 11px; color: var(--parchment-dim); line-height: 1.7; }
+  #contact { background: var(--ink); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+  .contact-left h2 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; color: var(--cream); }
+  .contact-left h2 em { font-style: italic; color: var(--gold); display: block; }
+  .contact-left p { font-size: 13px; line-height: 2; color: var(--parchment-dim); margin-top: 1.5rem; max-width: 360px; }
+  .contact-right { padding-top: 1rem; }
+  .contact-item { display: flex; flex-direction: column; gap: 4px; padding: 1.5rem 0; border-bottom: 1px solid var(--stone); }
+  .contact-item:first-child { border-top: 1px solid var(--stone); }
+  .contact-item-label { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--fog); }
+  .contact-item-value { font-size: 13px; color: var(--parchment); transition: color 0.3s; }
+  .contact-item-value a { color: inherit; text-decoration: none; }
+  .contact-item:hover .contact-item-value { color: var(--gold); }
+  .cta-btn { display: inline-block; margin-top: 3rem; padding: 14px 36px; border: 1px solid var(--gold-dim); color: var(--gold); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; background: transparent; transition: background 0.3s, color 0.3s; cursor: pointer; }
+  .cta-btn:hover { background: var(--gold); color: var(--ink); }
+  footer { background: var(--ink-2); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--stone); }
+  footer p { font-size: 10px; letter-spacing: 0.15em; color: var(--fog); }
+  .footer-mark { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold-dim); letter-spacing: 0.2em; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ECP</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+  <div class="hero-eyebrow">Development Executive · Senior Vice President</div>
+  <h1 class="hero-name">Elcid <em>C.</em><br>Pangilinan</h1>
+  <div class="hero-role">Land Bank of the Philippines &nbsp;·&nbsp; Chevening Alumni Foundation of the Philippines &nbsp;·&nbsp; Overseas Filipino Bank</div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-left">
+    <div class="section-label">01 — About</div>
+    <div class="section-divider"></div>
+    <h2>Public<br>servant.<br><em>Leader.</em></h2>
+  </div>
+  <div class="about-right">
+    <p>Elcid C. Pangilinan is a seasoned development executive and public finance leader with over three decades of distinguished service spanning banking, international development, policy advisory, and academia. He currently serves as Senior Vice President at the Land Bank of the Philippines, the country's premier development financial institution.</p>
+    <p>His expertise spans strategy formulation and planning, capacity development, monitoring and evaluation (M&E), management of Official Development Assistance (ODA), and ICT for development. He has worked with world-class institutions including the United Nations Development Programme, USAID, and the Millennium Challenge Account – Philippines.</p>
+    <p>A proud Chevening Scholar and Hubert H. Humphrey Fellow, Elcid brings a global perspective to every initiative — anchored always in the goal of inclusive and sustainable national development.</p>
+    <div class="about-tags">
+      <span class="tag">Development Finance</span>
+      <span class="tag">Public Policy</span>
+      <span class="tag">M&E</span>
+      <span class="tag">ODA Management</span>
+      <span class="tag">Financial Inclusion</span>
+      <span class="tag">ICT for Development</span>
+      <span class="tag">Capacity Building</span>
+      <span class="tag">Academia</span>
+    </div>
+    <div class="credentials">
+      <div class="credentials-title">Key Positions & Affiliations</div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Senior Vice President, Land Bank of the Philippines</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>OIC/President & CEO, Overseas Filipino Bank</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Chairman & Trustee, Chevening Alumni Foundation of the Philippines</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Chevening Scholar — UK Government Scholarship Programme (LSE, 1993–1994)</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Alumni, Hubert H. Humphrey Fellowship Program (Boston University, 2000–2001)</p>
+      </div>
+      <div class="credential-item">
+        <div class="credential-dot"></div>
+        <p>Former Professor, Ateneo Graduate School of Business (18 years)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="section-label">02 — Experience</div>
+  <h2>Professional <em>Journey</em></h2>
+  <div class="exp-grid">
+    <div class="exp-card">
+      <div class="exp-org">Land Bank of the Philippines</div>
+      <div class="exp-title">Senior Vice President</div>
+      <div class="exp-period">March 2021 – Present · 5+ years</div>
+      <p class="exp-desc">Leading development banking initiatives aimed at financial inclusion for underserved sectors — farmers, fisherfolk, MSMEs, and rural communities across the Philippines.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Overseas Filipino Bank</div>
+      <div class="exp-title">OIC/President & CEO</div>
+      <div class="exp-period">August 2024 – March 2026 · 1 year 8 months</div>
+      <p class="exp-desc">Served as Officer-in-Charge and President & CEO, overseeing the bank's operations and strategic direction in serving overseas Filipino workers and their families.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Land Bank of the Philippines</div>
+      <div class="exp-title">First Vice President</div>
+      <div class="exp-period">July 2017 – February 2021 · 3 years 8 months</div>
+      <p class="exp-desc">Drove key banking programs and institutional initiatives supporting the bank's mandate as a development financial institution serving the agricultural and agrarian reform sectors.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">USAID SURGE Project</div>
+      <div class="exp-title">Director for Monitoring & Evaluation</div>
+      <div class="exp-period">October 2015 – June 2017 · 1 year 9 months</div>
+      <p class="exp-desc">Led M&E for the USAID Strengthening Urban Resilience for Growth with Equity (SURGE) project, building evidence-based frameworks for urban development in the Philippines.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">DAI / USAID FPI Project</div>
+      <div class="exp-title">Director for Monitoring & Evaluation</div>
+      <div class="exp-period">November 2013 – October 2015 · 2 years</div>
+      <p class="exp-desc">Designed and implemented the Performance Monitoring Plan (PMP) for the USAID Facilitating Public Investments Project, leading data collection, capacity building, and M&E strategy.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Millennium Challenge Account – Philippines</div>
+      <div class="exp-title">Director for Monitoring & Evaluation</div>
+      <div class="exp-period">May 2011 – November 2013 · 2 years 7 months</div>
+      <p class="exp-desc">Led a 5-year M&E plan covering baseline, midline, and endline surveys across 198 municipalities nationwide, including evaluations for a 220-km road project and a Revenue Reform Project.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">United Nations Development Programme</div>
+      <div class="exp-title">Programme Support Manager</div>
+      <div class="exp-period">February 2003 – July 2006 · 3 years 6 months</div>
+      <p class="exp-desc">Managed USD 60M+ in core and non-core resources, led strategic IT initiatives including Knowledge Management and ERP, and served as focal point for ICT for Development (ICT4D) programmes.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Ateneo Graduate School of Business</div>
+      <div class="exp-title">Professor</div>
+      <div class="exp-period">February 1995 – June 2013 · 18 years</div>
+      <p class="exp-desc">Taught Macroeconomics, Managerial Economics, and Economic Development. Joined the faculty at age 26 as its youngest member. Recipient of the 2003 University Service Award.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Department of Education – Philippines</div>
+      <div class="exp-title">ICT4E Senior Policy Advisor</div>
+      <div class="exp-period">August 2007 – December 2010 · 3 years 5 months</div>
+      <p class="exp-desc">Led nationwide efforts to integrate ICT in education, develop ICT-enhanced curricula, and build e-learning content infrastructure and support systems across the country.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-org">Presidential Management Staff</div>
+      <div class="exp-title">Presidential Staff Officer</div>
+      <div class="exp-period">February 1989 – October 1993 · 4 years 9 months</div>
+      <p class="exp-desc">Served at the Office of the President of the Philippines, gaining foundational experience in public administration and national governance at the highest level.</p>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="section-label">03 — Education</div>
+  <h2>Academic <em>Formation</em></h2>
+  <div class="edu-list">
+    <div class="edu-item">
+      <div class="edu-year">1993 – 1994</div>
+      <div>
+        <div class="edu-school">The London School of Economics and Political Science (LSE)</div>
+        <div class="edu-degree">MSc (Econs), Social Policy and Planning in Developing Countries<br>Chevening Scholar — UK Government</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2000 – 2001</div>
+      <div>
+        <div class="edu-school">Boston University – School of Management</div>
+        <div class="edu-degree">Hubert H. Humphrey Fellow<br>Public Policy, Management and Finance</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">1983 – 1987</div>
+      <div>
+        <div class="edu-school">De La Salle University</div>
+        <div class="edu-degree">AB, Behavioral Sciences</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-left">
+    <div class="section-label">04 — Contact</div>
+    <div class="section-divider"></div>
+    <h2>Get in<br><em>Touch</em></h2>
+    <p>For professional inquiries, speaking engagements, or correspondence related to development finance and the Chevening Alumni Foundation of the Philippines.</p>
+  </div>
+  <div class="contact-right">
+    <div class="contact-item">
+      <span class="contact-item-label">Email</span>
+      <span class="contact-item-value"><a href="mailto:elcidcpangilinan@gmail.com">elcidcpangilinan@gmail.com</a></span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Phone</span>
+      <span class="contact-item-value"><a href="tel:+639178448376">+63 (917) 844 8376</a></span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">LinkedIn</span>
+      <span class="contact-item-value"><a href="https://www.linkedin.com/in/elcidpangilinan" target="_blank">linkedin.com/in/elcidpangilinan</a></span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Organization</span>
+      <span class="contact-item-value">Land Bank of the Philippines</span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Based In</span>
+      <span class="contact-item-value">Metro Manila, Philippines</span>
+    </div>
+    <a class="cta-btn" href="mailto:elcidcpangilinan@gmail.com">Send a Message</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Elcid C. Pangilinan. All rights reserved.</p>
+  <span class="footer-mark">ECP</span>
+</footer>
+
+</body>
+</html>
